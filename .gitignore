@@ -1,0 +1,16 @@
+node_modules
+
+assets/css/c4u.css
+assets/css/c4u.min.css
+assets/js/c4u.min.js
+assets/js/libs.js
+
+# craps
+*.sass-cache
+.DS_Store
+.cache
+Thumbs.db
+_notes
+_delivery
+node_modules
+config.rb

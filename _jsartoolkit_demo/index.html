@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width">
+<title>Chocolate 4 u</title>
+<script src="modernizr.custom.js"></script>
+<script src="jquery-2.1.0.min.js"></script>
+<script src="JSARToolKit.js"></script>
+<script src="three.min.js"></script>
+<script>
+
+;( function () {
+
+var CAN_PLAY = ( function () {
+  var hasURL = !!( window.URL || window.webkitURL );
+  return ( hasURL && Modernizr.getusermedia && Modernizr.webgl );
+} )();
+
+if ( !CAN_PLAY ) {
+  return;
+}
+
+// polyfills
+var _getUserMedia = function( t, onsuccess, onerror ) {
+  if ( navigator.getUserMedia ) {
+    return navigator.getUserMedia( t, onsuccess, onerror );
+  } else if ( navigator.webkitGetUserMedia ) {
+    return navigator.webkitGetUserMedia( t, onsuccess, onerror );
+  } else if ( navigator.mozGetUserMedia ) {
+    return navigator.mozGetUserMedia( t, onsuccess, onerror );
+  } else if ( navigator.msGetUserMedia ) {
+    return navigator.msGetUserMedia( t, onsuccess, onerror );
+  } else {
+    onerror( new Error( 'webcom is not available' ) );
+  }
+};
+
+var _URL = window.URL || window.webkitURL;
+
+window.DEBUG = false; // this will be used in JSARToolKit.js
+var DEBUG_STATIC_MODE = false;
+
+var width  = 800,
+    height = 600,
+    scale = 400 / Math.max( width, height ),
+    thresholds = [ 128, 64, 32, 192 ],
+    container,
+    detectCanvas,
+    ctx,
+    debugCanvas,
+    streamVideo,
+    lastTime = 0,
+    markerLostTime,
+    raster,
+    resultMatrix,
+    markers,
+    detector,
+    scene,
+    camera,
+    renderer,
+    meshContainer = new THREE.Object3D(),
+    mesh;
+
+
+var init = function () {
+  if ( DEBUG_STATIC_MODE ) {
+    ttt = document.getElementById( 'ttt');
+  }
+  container = document.querySelector( '#container' );
+  container.style.width  = width;
+  container.style.height = height;
+
+  streamVideo = document.querySelector( '#stream' );
+  streamVideo.width    = width;
+  streamVideo.height   = height;
+  streamVideo.loop     = true;
+  streamVideo.volume   = 0;
+  streamVideo.autoplay = true;
+  streamVideo.controls = false;
+
+  canvas = document.createElement('canvas');
+  canvas.width  = width * scale;
+  canvas.height = height * scale;
+  // document.body.appendChild( canvas );
+  ctx = canvas.getContext( '2d' );
+
+  if ( window.DEBUG ) {
+    debugCanvas = document.createElement('canvas');
+    debugCanvas.id = 'debugCanvas';
+    debugCanvas.width = width * scale;
+    debugCanvas.height = height * scale;
+    document.body.appendChild(debugCanvas);
+  }
+
+  raster = new NyARRgbRaster_Canvas2D( canvas );
+  var param = new FLARParam( width * scale, height * scale );
+
+  resultMatrix = new NyARTransMatResult();
+  markers = {};
+  detector = new FLARMultiIdMarkerDetector( param, 50 );
+  detector.setContinueMode( true );
+
+  scene = new THREE.Scene();
+  camera = new THREE.Camera();
+  renderer = new THREE.WebGLRenderer( {
+    canvas: document.querySelector( '#renderer3d' ),
+    alpha: true
+  } );
+  renderer.setSize( width, height );
+
+  var ambientLight = new THREE.AmbientLight( 0xcccccc );
+  scene.add( ambientLight );
+
+  var directionalLight = new THREE.DirectionalLight( 0xffffcc );
+  directionalLight.position.set( 0, -1, 0 );
+  scene.add( directionalLight );
+
+  meshContainer.matrixAutoUpdate = false;
+  scene.add( meshContainer );
+  
+  var pMatrix = new Float32Array( 16 );
+  param.copyCameraMatrix( pMatrix, 1, 10000 );
+  camera.projectionMatrix.set(
+    pMatrix[ 0 ], pMatrix[ 4 ], pMatrix[  8 ], pMatrix[ 12 ],
+    pMatrix[ 1 ], pMatrix[ 5 ], pMatrix[  9 ], pMatrix[ 13 ],
+    pMatrix[ 2 ], pMatrix[ 6 ], pMatrix[ 10 ], pMatrix[ 14 ],
+    pMatrix[ 3 ], pMatrix[ 7 ], pMatrix[ 11 ], pMatrix[ 15 ]
+  );
+};
+
+var loadModel = function () {
+  var d = new $.Deferred();
+  var loader = new THREE.JSONLoader();
+  loader.load( 'chocolate.js', function ( geometry, materials ) {
+    for ( var i = 0, l = materials.length; i < l; i ++ ) {
+      materials[ i ].side = THREE.DoubleSide;
+    }
+    mesh = new THREE.Mesh(
+      geometry,
+      new THREE.MeshFaceMaterial( materials )
+    );
+    mesh.rotation.x = THREE.Math.degToRad( -90 );
+    mesh.rotation.y = THREE.Math.degToRad( -90 );
+    mesh.scale.set( 500, 500, 500 );
+    meshContainer.add( mesh );
+    d.resolve();
+  } );
+  return d.promise();
+};
+
+var render = function () {
+  if ( !DEBUG_STATIC_MODE ) {
+    if ( streamVideo.paused ) {
+      return;
+    }
+    if ( streamVideo.currentTime === lastTime ) {
+      return;
+    }
+    if ( streamVideo.ended ) {
+      streamVideo.play();
+    }
+    if ( streamVideo.currentTime === streamVideo.duration ) {
+      streamVideo.currentTime = 0;
+    }
+    lastTime = streamVideo.currentTime;
+    ctx.drawImage( streamVideo, 0, 0, width * scale, height * scale );
+  } else {
+    ctx.drawImage( ttt, 0, 0, width * scale, height * scale );
+  }
+  canvas.changed = true;
+
+  var i, j, l, markerCount;
+  
+  for ( i = 0, l = thresholds.length; i < l; i ++ ) {
+    markerCount = detector.detectMarkerLite( raster, thresholds[ i ] );
+    if ( markerCount !== 0 ) {
+      markerLostTime = null;
+      break;
+    }
+  }
+  if ( markerCount === 0 ) {
+    return;
+  }
+
+  for ( i = 0; i < markerCount; i ++ ) {
+    var id = detector.getIdMarkerData( i );
+
+    var currId = -1;
+    if ( id.packetLength <= 4 ) {
+      currId = 0;
+      for ( var j = 0, l = id.packetLength; j < l; j ++ ) {
+        currId = ( currId << 8 ) | id.getPacketData( j );
+      }
+    }
+
+    if ( !markers[ currId ] ) {
+      markers[ currId ] = {};
+    }
+    detector.getTransformMatrix( i, resultMatrix );
+    markers[ currId ].transform = $.extend( true, {}, resultMatrix );
+  }
+  for ( i in markers ) {
+    var matrix = markers[ i ].transform;
+    meshContainer.matrix.set(
+       matrix.m00,  matrix.m01, -matrix.m02,  matrix.m03,
+      -matrix.m10, -matrix.m11,  matrix.m12, -matrix.m13,
+       matrix.m20,  matrix.m21, -matrix.m22,  matrix.m23,
+                0,           0,           0,           1
+    );
+    meshContainer.visible = true;
+    meshContainer.matrixWorldNeedsUpdate = true;
+  }
+  renderer.render( scene, camera );
+};
+
+var run = function () {
+
+  if ( DEBUG_STATIC_MODE ) {
+    render();
+    return;
+  }
+
+  var renderLoop = function () {
+    requestAnimationFrame( renderLoop );
+    camera.position.set( 0, 0, 10 );
+    render();
+  };
+
+  _getUserMedia(
+    {
+      video: true,
+      audio: false
+    },
+    function( stream ) {
+      streamVideo.src = _URL.createObjectURL( stream );
+      renderLoop();
+    },
+    function( error ) {
+      alert( error );
+    }
+  );
+
+};
+
+$( function () {
+  init();
+  $.when(
+    loadModel()
+  ).done( function () {
+    run();
+  } );
+} );
+
+} )();
+
+</script>
+<style>
+body{
+  padding: 0;
+  margin: 0;
+}
+#container{
+  position: relative;
+  margin: 0 auto;
+}
+#stream{
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+#renderer3d{
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+</style>
+
+</head>
+<body>
+
+<div id="container">
+  <video id="stream"></video>
+  <canvas id="renderer3d"></canvas>
+</div>
+
+<img src="ttt.jpg" id="ttt" style="display:none">
+
+</body>
+</html>

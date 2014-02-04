@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width">
+<title>Chocolate for you!</title>
+<link rel="stylesheet" href="assets/css/c4u.min.css">
+</head>
+<body>
+
+<header class="c4u-pageHeader">
+  <div class="c4u-pageHeader-logo">
+    <img src="assets/img/c4u-pageHeader/logo.png" width="300" height="30" alt="Chocolate for you">
+  </div>
+  <div class="c4u-pageHeader-info">
+    <div class="c4u-pageHeader-infoButton">info</div>
+    <div class="c4u-pageHeader-infoBody">
+      <ul>
+        <li>Author: <a href="https://twitter.com/yomotsu/">@yomotsu</a></li>
+        <li>Thanks to <a href="http://threejs.org/">three.js r65</a></li>
+        <li>Chocolate model (<a href="http://seiga.nicovideo.jp/seiga/im3699598">手作り風チョコアクセサリ</a>) by <a href="https://twitter.com/rossi_bi">@rossi_bi</a></li>
+      </ul>
+      <p>This is a content of <a href="http://jp.wgld.org/WebGL-Valentin/">WebGL-Valentin</a> by <a href="https://groups.google.com/forum/#!forum/japan-webgl-dev">japan webgl developers</a></p>
+    </div>
+  </div>
+<!-- /.c4u-pageHeader --></header>
+
+<div class="c4u-experiment" id="experiment">
+  <canvas class="c4u-experiment-canvas3d" id="canvas3d"></canvas>
+  <video class="c4u-experiment-stream" id="stream"></video>
+<!-- /.c4u-experiment --></div>
+
+<div class="c4u-help">
+  <div class="c4u-help-errors">
+    <div class="c4u-help-error1">
+      It seems, WebGL or Media Capture is not supported on the web browser. Try in other browser. It should be worked on Google Chrome or Firefox for desktop with Webcam. (Although IE11 has WebGL, but Media Capture is still not available. Hopefully <a href="http://html5labs.interoperabilitybridges.com/prototypes/cu-rtc-web-video/cu-rtc-web-video/info">IE will support it in near the future</a>)
+    </div>
+    <div class="c4u-help-error2">
+      It seems your WebCam is not available. Try again when you setup the WebCam.
+    </div>
+  </div>
+  <div class="c4u-help-steps">
+    <div class="c4u-help-step">
+      <div class="c4u-help-stepHeader">Allow access to the Webcam.</div>
+      <div class="c4u-help-stepBody"><img src="assets/img/c4u/img_01.jpg" width="240" height="140" alt=""></div>
+    </div>
+    <div class="c4u-help-step">
+      <div class="c4u-help-stepHeader">Get a marker. To do so, open the URL below <strong>in your Mobile Phone or Tablet</strong>.<br>http://goo.gl/chocolate4u</div>
+      <div class="c4u-help-stepBody"><img src="assets/img/c4u/img_02.jpg" width="240" height="140" alt=""></div>
+    </div>
+    <div class="c4u-help-step">
+      <div class="c4u-help-stepHeader">Show the marker to the Webcam. You will get a AR Chocolate then!</div>
+      <div class="c4u-help-stepBody"><img src="assets/img/c4u/img_03.jpg" width="240" height="140" alt=""></div>
+    </div>
+  </div>
+  <div class="c4u-help-buttonContainer">
+    <div class="c4u-help-playButton">Got it!</div>
+  </div>
+<!-- /.c4u-help --></div>
+
+<!--
+<script src="assets/js/vender/modernizr.custom.js"></script>
+<script src="assets/js/vender/jquery-2.1.0.min.js"></script>
+<script src="assets/js/vender/three.min.js"></script>
+<script src="assets/js/vender/cv.js"></script>
+<script src="assets/js/vender/aruco.js"></script>
+<script src="assets/js/vender/svd.js"></script>
+<script src="assets/js/vender/posit1.js"></script>
+<script src="assets/js/src/c4u.js"></script>
+-->
+<script src="assets/js/libs.js"></script>
+<script src="assets/js/c4u.min.js"></script>
+
+</body>
+</html>

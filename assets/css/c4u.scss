@@ -1,0 +1,249 @@
+$font1: 'Mystery Quest', cursive;
+$z-bow: 10;
+$z-header: 9;
+$z-info: 9;
+$z-3d: 8;
+$z-video: 7;
+
+@import "_util.scss";
+
+@import url(http://fonts.googleapis.com/css?family=Mystery+Quest);
+@font-face {
+  font-family: 'icon';
+  src: url('../font/icon.eot');
+  src: url('../font/icon.eot#iefix') format('embedded-opentype'),
+       url('../font/icon.woff') format('woff'),
+       url('../font/icon.ttf') format('truetype'),
+       url('../font/icon.svg#icon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+/* ==========================================================================
+   c4u
+   ========================================================================== */
+html{
+  color: #331902;
+  font-family:$fontSansSerif;
+  font-size: $basefontSize * 1px;
+  overflow-y:scroll;
+}
+body{
+  position: relative;
+  margin: 0;
+  padding: 110px 0 0;
+  background: url( ../img/c4u/bg_02.png ) repeat-x 0 62px, url( ../img/c4u/bg_01.png ) 50% 0;
+  &:before{
+    $width: 340px;
+    content: '';
+    position: absolute;
+    z-index:$z-bow;
+    top:0;
+    left:50%;
+    display: block;
+    width: 340px;
+    height: 240px;
+    margin-left: $width / -2;
+    background: url( ../img/c4u/bow.png ) no-repeat;
+  }
+}
+a{
+  color: #331902;
+}
+a:hover{
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   c4u-pageHeader
+   ========================================================================== */
+.c4u-pageHeader{
+  position: absolute;
+  z-index:$z-header;
+  top:0;
+  left:30px;
+  width: 240px;
+  padding: 10px 58px 60px 50px;
+  background: url( ../img/c4u-pageHeader/bg_01.png ) no-repeat 0 100%;
+}
+.c4u-pageHeader-logo{
+  width: 300px;
+  margin: 0 -30px 10px;
+  img{
+    display: block;
+  }
+}
+.c4u-pageHeader-info{}
+.c4u-pageHeader-infoButton{
+  text-decoration: underline;
+  cursor: pointer;
+  display: table;
+  margin: 0 auto;
+}
+.c4u-pageHeader-infoBody{
+  font-size: font-size( 12 );
+  display: none;
+  ul{
+    margin-left: 20px;
+    padding-left: 0;
+  }
+  li{
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* ==========================================================================
+   c4u-experiment
+   ========================================================================== */
+.c4u-experiment{
+  position: relative;
+  width: 800px;
+  height: 600px;
+  padding: 20px;
+  margin: 0 auto;
+  background: url( ../img/c4u-experiment/bg_01.png ) no-repeat;
+}
+.c4u-experiment-canvas3d{
+  position: absolute;
+  z-index:$z-3d;
+}
+.c4u-experiment-stream{
+  position: absolute;
+  z-index:$z-video;
+}
+
+
+/* ==========================================================================
+   c4u-help
+   ========================================================================== */
+.c4u-help{
+  position: absolute;
+  z-index:$z-info;
+  width: 900px;
+  padding: 20px;
+  margin: -550px 0 0 -450px;
+  left:50%;
+  background: #cfb88c;
+  transition: margin-top 1.5s;
+  -webkit-animation: slideIn 1s ease-out;
+     -moz-animation: slideIn 1s ease-out;
+          animation: slideIn 1s ease-out;
+  &.c4u-help--checked{
+    margin-top:30px;
+  }
+}
+@-webkit-keyframes slideIn {
+  from { margin-top:30px; }
+  to   { margin-top:-550px; }
+}
+@-moz-keyframes slideIn {
+  from { margin-top:30px; }
+  to   { margin-top:-550px; }
+}
+@keyframes slideIn {
+  from { margin-top:30px; }
+  to   { margin-top:-550px; }
+}
+.c4u-help-errors{
+  display: none;
+  padding: 6px;
+  margin-bottom: 20px;
+  background: url( ../img/c4u-help/bg_03.png );
+  -webkit-animation: bgSlide 1s linear;
+     -moz-animation: bgSlide 1s linear;
+          animation: bgSlide 1s linear;
+  -webkit-animation-iteration-count:infinite;
+     -moz-animation-iteration-count:infinite;
+          animation-iteration-count:infinite;
+  .c4u-help--hasError & {
+    display: block;
+  }
+}
+@-webkit-keyframes bgSlide {
+  from { background-position:0 0; }
+  to   { background-position:30px 0; }
+}
+@-moz-keyframes bgSlide {
+  from { background-position:0 0; }
+  to   { background-position:30px 0; }
+}
+@keyframes bgSlide {
+  from { background-position:0 0; }
+  to   { background-position:30px 0; }  
+}
+.c4u-help-error1,
+.c4u-help-error2{
+  display: none;
+  padding: 6px 12px;
+  background: #ffff00;
+}
+
+.c4u-help-steps{
+  @include clearfix();
+  width: 900px;
+  margin: 0 auto;
+  transition: opacity .5s;
+  background: url( ../img/c4u-help/bg_02.png ) no-repeat 0 50%;
+  .c4u-help--hasError & {
+    opacity: .3;
+  }
+}
+.c4u-help-step{
+  position: relative;
+  float: left;
+  display: table;
+  width: 240px;
+  padding: 10px;
+  margin-left: 60px;
+  &:first-child{
+    margin-left: 0;
+  }
+  &:before{
+    color: #fff;
+    font-family: $font1;
+    font-size:100px;
+    line-height: 1;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+    width: 60px;
+  }
+  &:first-child:before{
+    content:'1';
+  }
+  &:first-child+.c4u-help-step:before{
+    content:'2';
+  }
+  &:first-child+.c4u-help-step+.c4u-help-step:before{
+    content:'3';
+  }
+}
+.c4u-help-stepHeader{
+  display: table-cell;
+  vertical-align: middle;
+}
+.c4u-help-stepBody{
+  display: table-row;
+  img{
+    display: block;
+    margin-right: -240px;
+  }
+}
+.c4u-help-buttonContainer{
+  text-align: center;
+  margin: 2em 0 0;
+}
+.c4u-help-playButton{
+  @include linear-gradient( '', '341c02', '0', '452503', '100' );
+  color: #fff;
+  font-size: font-size( 16 );
+  display: inline-block;
+  padding: 12px 50px;
+  border-radius:3px;
+  cursor: pointer;
+  .c4u-help--hasError & {
+    display: none;
+  }
+}
