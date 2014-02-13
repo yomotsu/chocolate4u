@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width">
+<meta property="og:image" content="http://yomotsu.net/blog/assets/2014-02-13-chocolate4u/assets/img/c4u/ogimage.png">
 <title>Chocolate for you!</title>
 <link rel="stylesheet" href="assets/css/c4u.min.css">
 </head>
@@ -18,8 +19,8 @@
     <div class="c4u-pageHeader-infoBody">
       <ul>
         <li>Author: <a href="https://twitter.com/yomotsu/">@yomotsu</a></li>
-        <li>Thanks to <a href="http://threejs.org/">three.js r65</a></li>
-        <li>Chocolate model (<a href="http://seiga.nicovideo.jp/seiga/im3699598">手作り風チョコアクセサリ</a>) by <a href="https://twitter.com/rossi_bi">@rossi_bi</a></li>
+        <li>Powered by <a href="http://threejs.org/">three.js r65</a></li>
+        <li><a href="http://seiga.nicovideo.jp/seiga/im3699598">Chocolate model</a> by <a href="https://twitter.com/rossi_bi">@rossi_bi</a></li>
       </ul>
       <p>This is a content of <a href="http://jp.wgld.org/WebGL-Valentin/">WebGL-Valentin</a> by <a href="https://groups.google.com/forum/#!forum/japan-webgl-dev">japan webgl developers</a></p>
     </div>
@@ -30,6 +31,10 @@
   <canvas class="c4u-experiment-canvas3d" id="canvas3d"></canvas>
   <video class="c4u-experiment-stream" id="stream"></video>
 <!-- /.c4u-experiment --></div>
+
+<div class="c4u-buttonContainer">
+  <div class="c4u-button" id="takephoto">take a photo<br>and share it!</div>
+</div>
 
 <div class="c4u-help">
   <div class="c4u-help-errors">
@@ -46,7 +51,7 @@
       <div class="c4u-help-stepBody"><img src="assets/img/c4u/img_01.jpg" width="240" height="140" alt=""></div>
     </div>
     <div class="c4u-help-step">
-      <div class="c4u-help-stepHeader">Get a marker. To do so, open the URL below <strong>in your Mobile Phone or Tablet</strong>.<br>http://goo.gl/chocolate4u</div>
+      <div class="c4u-help-stepHeader">Get a marker. To do so, open the URL below <strong>in your Mobile Phone or Tablet</strong>.<br>http://bit.ly/chocolate4you</div>
       <div class="c4u-help-stepBody"><img src="assets/img/c4u/img_02.jpg" width="240" height="140" alt=""></div>
     </div>
     <div class="c4u-help-step">
@@ -54,8 +59,8 @@
       <div class="c4u-help-stepBody"><img src="assets/img/c4u/img_03.jpg" width="240" height="140" alt=""></div>
     </div>
   </div>
-  <div class="c4u-help-buttonContainer">
-    <div class="c4u-help-playButton">Got it!</div>
+  <div class="c4u-buttonContainer">
+    <div class="c4u-button" id="playButton">Got it!</div>
   </div>
 <!-- /.c4u-help --></div>
 

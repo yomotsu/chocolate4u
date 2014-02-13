@@ -1,4 +1,4 @@
-;( function ( $, window, document ) {
+;( function ( THREE, $, window, document ) {
 var CAN_PLAY = ( function () {
   var hasURL = !!( window.URL || window.webkitURL );
   return ( hasURL && Modernizr.getusermedia && Modernizr.webgl );
@@ -27,6 +27,7 @@ var WIDTH  = 800,
     $container,
     $streamVideo,
     $canvas2d,
+    $canvas3d,
     context2d,
     detector,
     posit,
@@ -84,13 +85,16 @@ var init = function () {
   // $( 'body' ).append( $canvas2d );
   context2d = $canvas2d[ 0 ].getContext( '2d' );
 
+  $canvas3d = $( '#canvas3d' );
+
   detector = new AR.Detector();
   posit = new POS.Posit( 1, WIDTH );
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 40, WIDTH / HEIGHT, 1, 1000 );
   renderer = new THREE.WebGLRenderer( {
-    canvas: document.querySelector( '#canvas3d' ),
+    canvas: $canvas3d[ 0 ],
+    preserveDrawingBuffer: true,
     alpha: true
   } );
   renderer.setSize( WIDTH, HEIGHT );
@@ -169,7 +173,7 @@ var iGotIt = function () {
   var d = new $.Deferred();
   var HIDE_CLASS = 'c4u-help--checked';
   var $help = $( '.c4u-help' );
-  var $button = $help.find( '.c4u-help-playButton' );
+  var $button = $( '#playButton' );
   $button.one( 'click', function () {
     $help.addClass( HIDE_CLASS );
     $button.fadeOut();
@@ -198,14 +202,45 @@ $.when(
 
 
 
+
+
+
+
 $( function () {
-  $( '.c4u-pageHeader-info' ).each( function () {
-    var $info = $( this );
-    var $button = $info.find( '.c4u-pageHeader-infoButton' );
-    var $contents = $info.find( '.c4u-pageHeader-infoBody' );
-    $button.on( 'click', function () {
-      $contents.slideToggle();
-    } );
+  var $info = $( '.c4u-pageHeader-info' );
+  var $button = $info.find( '.c4u-pageHeader-infoButton' );
+  var $contents = $info.find( '.c4u-pageHeader-infoBody' );
+  $button.on( 'click', function () {
+    $contents.slideToggle();
   } );
 } );
-} )( jQuery, window, document );
+
+
+$( function () {
+  var $canvas = $( document.createElement( 'canvas' ) );
+  $canvas.attr( {
+    width  : WIDTH,
+    height : HEIGHT
+  } );
+  var ctx = $canvas[ 0 ].getContext( '2d' );
+  $( '#takephoto' ).on( 'click', function () {
+    $canvas[ 0 ].width = $canvas[ 0 ].width;
+
+    var image3d = new Image();
+    image3d.src = $canvas3d[ 0 ].toDataURL( 'image/png' );
+
+    ctx.drawImage( $streamVideo[ 0 ], 0, 0, WIDTH, HEIGHT );
+    ctx.drawImage( image3d, 0, 0, WIDTH, HEIGHT );
+    var src = $canvas[ 0 ].toDataURL( 'image/png' );
+    var dataurl = [
+      'data:text/html,',
+      '<body style="margin:0;padding:0;">',
+      '<img src="',
+      src,
+      '"/>'
+    ].join('');
+    window.open( dataurl, '', 'width=' + WIDTH + ', height=' + HEIGHT + ', menubar=no, toolbar=no, scrollbars=yes' );
+  } );
+} );
+
+} )( THREE, jQuery, window, document );

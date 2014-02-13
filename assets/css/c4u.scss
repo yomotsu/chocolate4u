@@ -116,6 +116,27 @@ a:hover{
 
 
 /* ==========================================================================
+   c4u-button
+   ========================================================================== */
+
+.c4u-buttonContainer{
+  text-align: center;
+  margin: 2em 0 0;
+}
+.c4u-button{
+  @include linear-gradient( '', '341c02', '0', '452503', '100' );
+  color: #fff;
+  font-size: font-size( 16 );
+  display: inline-block;
+  padding: 12px 50px;
+  border-radius:3px;
+  cursor: pointer;
+  .c4u-help--hasError & {
+    display: none;
+  }
+}
+
+/* ==========================================================================
    c4u-help
    ========================================================================== */
 .c4u-help{
@@ -123,7 +144,7 @@ a:hover{
   z-index:$z-info;
   width: 900px;
   padding: 20px;
-  margin: -550px 0 0 -450px;
+  margin: -620px 0 0 -470px;
   left:50%;
   background: #cfb88c;
   transition: margin-top 1.5s;
@@ -136,15 +157,15 @@ a:hover{
 }
 @-webkit-keyframes slideIn {
   from { margin-top:30px; }
-  to   { margin-top:-550px; }
+  to   { margin-top:-620px; }
 }
 @-moz-keyframes slideIn {
   from { margin-top:30px; }
-  to   { margin-top:-550px; }
+  to   { margin-top:-620px; }
 }
 @keyframes slideIn {
   from { margin-top:30px; }
-  to   { margin-top:-550px; }
+  to   { margin-top:-620px; }
 }
 .c4u-help-errors{
   display: none;
@@ -229,21 +250,5 @@ a:hover{
   img{
     display: block;
     margin-right: -240px;
-  }
-}
-.c4u-help-buttonContainer{
-  text-align: center;
-  margin: 2em 0 0;
-}
-.c4u-help-playButton{
-  @include linear-gradient( '', '341c02', '0', '452503', '100' );
-  color: #fff;
-  font-size: font-size( 16 );
-  display: inline-block;
-  padding: 12px 50px;
-  border-radius:3px;
-  cursor: pointer;
-  .c4u-help--hasError & {
-    display: none;
   }
 }
