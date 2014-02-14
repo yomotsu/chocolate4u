@@ -227,7 +227,7 @@ a:hover{
     font-size:100px;
     line-height: 1;
     text-align: center;
-    vertical-align: middle;
+    vertical-align: top;
     display: table-cell;
     width: 60px;
   }
@@ -243,6 +243,8 @@ a:hover{
 }
 .c4u-help-stepHeader{
   display: table-cell;
+  height: 125px;
+  min-height: 125px;
   vertical-align: middle;
 }
 .c4u-help-stepBody{
@@ -251,4 +253,14 @@ a:hover{
     display: block;
     margin-right: -240px;
   }
+}
+.c4u-help-url{
+  color: #452503;
+  font-size: 14px;
+  font-family: monospace;
+  word-break: break-all;
+  padding: 3px;
+  border:1px solid #452503;
+  margin: .5em 0 0 -60px;
+  background: #fff;
 }
